@@ -1,0 +1,25 @@
+.NavList {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.NavItem + .NavItem {
+  margin-left: 30px;
+}
+
+.Navlink {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgb(20, 80, 82);
+  text-decoration: none;
+  transition: color 250ms ease;
+  &:hover {
+    color: #fff;
+  }
+}
+
+.Navlink-active {
+  color: tomato;
+}

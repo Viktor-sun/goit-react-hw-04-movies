@@ -1,0 +1,29 @@
+.MoviesList {
+  padding: 0 20px;
+  margin: 0;
+  list-style: none;
+
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 24px;
+}
+
+.MoviesList__item {
+  transition: transform 250ms ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.MoviesList__img {
+  height: 464px;
+}
+
+.MoviesList__link {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+  font-size: 20px;
+}
