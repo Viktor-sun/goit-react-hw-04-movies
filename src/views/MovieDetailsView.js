@@ -41,6 +41,7 @@ class MovieDetailsView extends Component {
 
     if (location.state && location.state.from) {
       history.push(location.state.from);
+      return;
     }
 
     history.push(routes.home);
@@ -59,9 +60,10 @@ class MovieDetailsView extends Component {
 
       error,
     } = this.state;
+
     const genres = this.getGenres();
 
-    const { match } = this.props;
+    const { match, location } = this.props;
 
     return (
       <article className="MovieDetailsCard">
@@ -91,10 +93,28 @@ class MovieDetailsView extends Component {
           </ul>
           <ul>
             <li>
-              <NavLink to={`${match.url}/cast`}>Cast</NavLink>
+              <NavLink
+                to={{
+                  pathname: `${match.url}/cast`,
+                  state: {
+                    from: location,
+                  },
+                }}
+              >
+                Cast
+              </NavLink>
             </li>
             <li>
-              <NavLink to={`${match.url}/reviews`}>Reviews</NavLink>
+              <NavLink
+                to={{
+                  pathname: `${match.url}/reviews`,
+                  state: {
+                    from: location,
+                  },
+                }}
+              >
+                Reviews
+              </NavLink>
             </li>
           </ul>
 
