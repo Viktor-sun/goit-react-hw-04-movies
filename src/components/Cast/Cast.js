@@ -8,9 +8,9 @@ class Cast extends Component {
   };
 
   componentDidMount() {
-    api
-      .fetchInfoByCast('527774')
-      .then(d => this.setState({ dataCast: d.cast }));
+    const { movieId } = this.props.match.params;
+
+    api.fetchInfoByCast(movieId).then(d => this.setState({ dataCast: d.cast }));
   }
 
   render() {

@@ -7,8 +7,10 @@ class Reviews extends Component {
   };
 
   componentDidMount() {
+    const { movieId } = this.props.match.params;
+
     api
-      .fetchReviews('527774')
+      .fetchReviews(movieId)
       .then(({ results }) => this.setState({ dataReviews: results }));
   }
 

@@ -3,7 +3,6 @@ import { NavLink, Route, Switch } from 'react-router-dom';
 import TitleOnError from '../components/TitleOnError';
 import Cast from '../components/Cast';
 import Reviews from '../components/Reviews';
-import routes from '../routes';
 import * as api from '../service/api-movies';
 import '../styles/MovieDetailsView.scss';
 
@@ -71,19 +70,18 @@ class MovieDetailsView extends Component {
           </ul>
           <ul>
             <li>
-              <NavLink to={`${this.props.match.params.movieId}/cast`}>
-                Cast
-              </NavLink>
+              <NavLink to={`${this.props.match.url}/cast`}>Cast</NavLink>
             </li>
             <li>
-              <NavLink to={`${this.props.match.params.movieId}/reviews`}>
-                Reviews
-              </NavLink>
+              <NavLink to={`${this.props.match.url}/reviews`}>Reviews</NavLink>
             </li>
           </ul>
           <Switch>
-            <Route path={routes.cast} component={Cast} />
-            <Route path={routes.reviews} component={Reviews} />
+            <Route path={`${this.props.match.path}/cast`} component={Cast} />
+            <Route
+              path={`${this.props.match.path}/reviews`}
+              component={Reviews}
+            />
           </Switch>
         </div>
       </article>
