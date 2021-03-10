@@ -21,6 +21,7 @@ class MoviesView extends Component {
 
   render() {
     const { searchMoviesArr, error } = this.state;
+
     return (
       <>
         {error && <TitleOnError />}

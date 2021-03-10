@@ -4,6 +4,7 @@ import TitleOnError from '../components/TitleOnError';
 import Cast from '../components/Cast';
 import Reviews from '../components/Reviews';
 import * as api from '../service/api-movies';
+import routes from '../routes';
 import '../styles/MovieDetailsView.scss';
 
 class MovieDetailsView extends Component {
@@ -35,6 +36,18 @@ class MovieDetailsView extends Component {
     }
   };
 
+  handleGoBack = () => {
+    const { location, history } = this.props;
+
+    if (location.state && location.state.from) {
+      history.push(location.state.from);
+    }
+
+    history.push(routes.home);
+
+    // history.push(location?.state?.from || routes.home);
+  };
+
   render() {
     const {
       poster_path,
@@ -48,9 +61,17 @@ class MovieDetailsView extends Component {
     } = this.state;
     const genres = this.getGenres();
 
+    const { match } = this.props;
+
     return (
       <article className="MovieDetailsCard">
         {error && <TitleOnError />}
+        <div>
+          <button type="button" onClick={this.handleGoBack}>
+            Back
+          </button>
+        </div>
+
         <img
           src={poster_path && `https://image.tmdb.org/t/p/w780${poster_path}`}
           alt={title}
@@ -70,18 +91,16 @@ class MovieDetailsView extends Component {
           </ul>
           <ul>
             <li>
-              <NavLink to={`${this.props.match.url}/cast`}>Cast</NavLink>
+              <NavLink to={`${match.url}/cast`}>Cast</NavLink>
             </li>
             <li>
-              <NavLink to={`${this.props.match.url}/reviews`}>Reviews</NavLink>
+              <NavLink to={`${match.url}/reviews`}>Reviews</NavLink>
             </li>
           </ul>
+
           <Switch>
-            <Route path={`${this.props.match.path}/cast`} component={Cast} />
-            <Route
-              path={`${this.props.match.path}/reviews`}
-              component={Reviews}
-            />
+            <Route path={`${match.path}/cast`} component={Cast} />
+            <Route path={`${match.path}/reviews`} component={Reviews} />
           </Switch>
         </div>
       </article>

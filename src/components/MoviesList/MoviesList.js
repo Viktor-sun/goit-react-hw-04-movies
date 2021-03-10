@@ -1,23 +1,27 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
+import MoviesPreview from '../MoviesPreview';
 import './MoviesList.scss';
 
-const MoviesList = ({ movies }) => (
+const MoviesList = ({ movies, location }) => (
   <ul className="MoviesList">
     {movies &&
       movies.map(({ id, poster_path, title, name }) => (
         <li key={id} className="MoviesList__item">
-          <NavLink to={`movies/${id}`} className="MoviesList__link">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-              alt={title}
-              className="MoviesList__img"
-            />
-            <p>{title || name}</p>
+          <NavLink
+            to={{
+              pathname: `movies/${id}`,
+              state: {
+                from: location,
+              },
+            }}
+            className="MoviesList__link"
+          >
+            <MoviesPreview title={title} name={name} poster={poster_path} />
           </NavLink>
         </li>
       ))}
   </ul>
 );
 
-export default MoviesList;
+export default withRouter(MoviesList);
