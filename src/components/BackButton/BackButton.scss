@@ -1,0 +1,29 @@
+.BackButton {
+  position: absolute;
+  top: 70px;
+  right: 40px;
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #56b5b8;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+  transition: background-color 250ms ease;
+
+  &:hover {
+    background-color: #389ca0;
+  }
+
+  &:active {
+    background-color: #56b5b8;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }
+}

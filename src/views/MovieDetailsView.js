@@ -3,19 +3,17 @@ import { NavLink, Route, Switch } from 'react-router-dom';
 import TitleOnError from '../components/TitleOnError';
 import Cast from '../components/Cast';
 import Reviews from '../components/Reviews';
+import MovieDetails from '../components/MovieDetails';
+import BackButton from '../components/BackButton';
 import * as api from '../service/api-movies';
 import routes from '../routes';
 import '../styles/MovieDetailsView.scss';
 
 class MovieDetailsView extends Component {
   state = {
-    poster_path: null,
-    title: null,
-    overview: null,
-    original_language: null,
-    vote_average: null,
-    genres: [],
-    homepage: null,
+    InfoByMovies: {},
+    cast: [],
+    reviews: [],
 
     error: null,
   };
@@ -25,16 +23,19 @@ class MovieDetailsView extends Component {
 
     api
       .fetchInfoByMovies(movieId)
-      .then(data => this.setState({ ...data }))
+      .then(data => this.setState({ InfoByMovies: data }))
+      .catch(error => this.setState({ error }));
+
+    api
+      .fetchInfoByCast(movieId)
+      .then(d => this.setState({ cast: d.cast }))
+      .catch(error => this.setState({ error }));
+
+    api
+      .fetchReviews(movieId)
+      .then(({ results }) => this.setState({ reviews: results }))
       .catch(error => this.setState({ error }));
   }
-
-  getGenres = () => {
-    const { genres } = this.state;
-    if (genres) {
-      return genres.map(({ name }) => name).join(', ');
-    }
-  };
 
   handleGoBack = () => {
     const { location, history } = this.props;
@@ -50,54 +51,35 @@ class MovieDetailsView extends Component {
   };
 
   render() {
-    const {
-      poster_path,
-      title,
-      overview,
-      original_language,
-      vote_average,
-      homepage,
-
-      error,
-    } = this.state;
-
-    const genres = this.getGenres();
+    const { InfoByMovies, cast, reviews, error } = this.state;
 
     const { match, location } = this.props;
 
     return (
-      <article className="MovieDetailsCard">
+      <section className="MovieDetailsCard">
         {error && <TitleOnError />}
-        <div>
-          <button type="button" onClick={this.handleGoBack}>
-            Back
-          </button>
-        </div>
+        <BackButton onBack={this.handleGoBack} />
 
         <img
-          src={poster_path && `https://image.tmdb.org/t/p/w780${poster_path}`}
-          alt={title}
+          src={
+            InfoByMovies.poster_path &&
+            `https://image.tmdb.org/t/p/w780${InfoByMovies.poster_path}`
+          }
+          alt={InfoByMovies.title}
         />
-        <div className="MovieDetails">
-          <h2>{title}</h2>
-          <p>{overview}</p>
-          <ul>
-            <li>{genres}</li>
-            <li>Original language: {original_language}</li>
-            <li>User Score: {vote_average}</li>
-            <li>
-              <a href={homepage} target="_blank" rel="noopener noreferrer">
-                Homepage
-              </a>
-            </li>
-          </ul>
+        <div className="MovieDetailsWrapper">
+          <MovieDetails info={InfoByMovies} />
+
           <ul>
             <li>
               <NavLink
                 to={{
                   pathname: `${match.url}/cast`,
                   state: {
-                    from: location,
+                    from:
+                      location.state && location.state.from
+                        ? location.state.from
+                        : null,
                   },
                 }}
               >
@@ -109,7 +91,10 @@ class MovieDetailsView extends Component {
                 to={{
                   pathname: `${match.url}/reviews`,
                   state: {
-                    from: location,
+                    from:
+                      location.state && location.state.from
+                        ? location.state.from
+                        : null,
                   },
                 }}
               >
@@ -119,11 +104,17 @@ class MovieDetailsView extends Component {
           </ul>
 
           <Switch>
-            <Route path={`${match.path}/cast`} component={Cast} />
-            <Route path={`${match.path}/reviews`} component={Reviews} />
+            <Route
+              path={`${match.path}/cast`}
+              render={props => <Cast {...props} dataCast={cast} />}
+            />
+            <Route
+              path={`${match.path}/reviews`}
+              render={props => <Reviews {...props} dataReviews={reviews} />}
+            />
           </Switch>
         </div>
-      </article>
+      </section>
     );
   }
 }
