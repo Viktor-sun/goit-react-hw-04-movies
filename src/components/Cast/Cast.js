@@ -4,6 +4,7 @@ import './Cast.scss';
 
 const Cast = ({ dataCast }) => (
   <>
+    {dataCast.length === 0 && <h2>We do not have Cast</h2>}
     <ul className="Cast">
       {dataCast.length > 0 &&
         dataCast.map(({ id, name, character, profile_path }) => (
