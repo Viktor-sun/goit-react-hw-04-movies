@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './BackButton.scss';
 
 const BackButton = ({ onBack }) => (
@@ -6,5 +7,9 @@ const BackButton = ({ onBack }) => (
     Back
   </button>
 );
+
+BackButton.propTypes = {
+  onBack: PropTypes.func.isRequired,
+};
 
 export default BackButton;

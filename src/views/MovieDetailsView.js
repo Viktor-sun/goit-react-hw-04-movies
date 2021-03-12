@@ -21,21 +21,25 @@ class MovieDetailsView extends Component {
   componentDidMount() {
     const { movieId } = this.props.match.params;
 
+    this.fetchAndSetStateAllInfo(movieId);
+  }
+
+  fetchAndSetStateAllInfo = id => {
     api
-      .fetchInfoByMovies(movieId)
+      .fetchInfoByMovies(id)
       .then(data => this.setState({ InfoByMovies: data }))
       .catch(error => this.setState({ error }));
 
     api
-      .fetchInfoByCast(movieId)
-      .then(d => this.setState({ cast: d.cast }))
+      .fetchInfoByCast(id)
+      .then(({ cast }) => this.setState({ cast }))
       .catch(error => this.setState({ error }));
 
     api
-      .fetchReviews(movieId)
+      .fetchReviews(id)
       .then(({ results }) => this.setState({ reviews: results }))
       .catch(error => this.setState({ error }));
-  }
+  };
 
   handleGoBack = () => {
     const { location, history } = this.props;

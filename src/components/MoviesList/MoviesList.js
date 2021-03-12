@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import MoviesPreview from '../MoviesPreview';
 import './MoviesList.scss';
 
@@ -23,5 +24,13 @@ const MoviesList = ({ movies, location }) => (
       ))}
   </ul>
 );
+
+MoviesList.propTypes = {
+  movies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
+};
 
 export default withRouter(MoviesList);

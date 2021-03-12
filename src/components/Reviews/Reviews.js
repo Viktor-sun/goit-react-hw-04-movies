@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Reviews = ({ dataReviews }) => (
   <>
@@ -15,5 +16,15 @@ const Reviews = ({ dataReviews }) => (
     )}
   </>
 );
+
+Reviews.propTypes = {
+  dataReviews: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      author: PropTypes.string,
+      content: PropTypes.string,
+    }),
+  ).isRequired,
+};
 
 export default Reviews;

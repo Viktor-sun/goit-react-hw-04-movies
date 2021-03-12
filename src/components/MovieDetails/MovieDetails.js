@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './MovieDetails.scss';
 
 const MovieDetails = ({ info }) => {
@@ -27,6 +28,17 @@ const MovieDetails = ({ info }) => {
       </ul>
     </>
   );
+};
+
+MovieDetails.propTypes = {
+  info: PropTypes.shape({
+    title: PropTypes.string,
+    overview: PropTypes.string,
+    genres: PropTypes.array,
+    original_language: PropTypes.string,
+    vote_average: PropTypes.number,
+    homepage: PropTypes.string,
+  }).isRequired,
 };
 
 export default MovieDetails;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import * as api from '../service/api-movies';
 import TitleOnError from '../components/TitleOnError';
 import MoviesList from '../components/MoviesList';
+import * as api from '../service/api-movies';
 import '../styles/HomeView.scss';
 
 class HomeView extends Component {
@@ -11,13 +11,17 @@ class HomeView extends Component {
   };
 
   componentDidMount() {
+    this.fetchAndSetStateMovies();
+  }
+
+  fetchAndSetStateMovies = () => {
     api
       .fetchPopularMovies()
       .then(data => {
         this.setState({ moviesArr: data.results });
       })
       .catch(error => this.setState({ error }));
-  }
+  };
 
   render() {
     const { moviesArr, error } = this.state;

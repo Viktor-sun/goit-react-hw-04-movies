@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './SearchForm.scss';
 
 class SearchForm extends Component {
+  static propTypes = {
+    submit: PropTypes.func.isRequired,
+  };
+
   state = { query: '' };
 
   handleChange = e => {

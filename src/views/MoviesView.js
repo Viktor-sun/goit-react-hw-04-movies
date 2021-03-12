@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
-import * as api from '../service/api-movies';
 import TitleOnError from '../components/TitleOnError';
 import SearchForm from '../components/SearchForm';
 import MoviesList from '../components/MoviesList';
+import * as api from '../service/api-movies';
 
 class MoviesView extends Component {
   state = {
@@ -12,15 +12,10 @@ class MoviesView extends Component {
   };
 
   componentDidMount() {
-    const query = this.parseQueryFromProps(this.props).query;
+    const searchQuery = this.parseQueryFromProps(this.props).query;
 
-    if (query) {
-      api
-        .fetchSearchMovies(query)
-        .then(data => {
-          this.setState({ searchMoviesArr: data.results });
-        })
-        .catch(error => this.setState({ error }));
+    if (searchQuery) {
+      this.fetchAndSetStateMoves(searchQuery);
     }
   }
 
@@ -29,14 +24,20 @@ class MoviesView extends Component {
     const nextQuery = this.parseQueryFromProps(this.props).query;
 
     if (prevQuery !== nextQuery) {
-      api
-        .fetchSearchMovies(nextQuery)
-        .then(data => {
-          this.setState({ searchMoviesArr: data.results });
-        })
-        .catch(error => this.setState({ error }));
+      this.fetchAndSetStateMoves(nextQuery);
     }
   }
+
+  parseQueryFromProps = props => queryString.parse(props.location.search);
+
+  fetchAndSetStateMoves = query => {
+    api
+      .fetchSearchMovies(query)
+      .then(data => {
+        this.setState({ searchMoviesArr: data.results });
+      })
+      .catch(error => this.setState({ error }));
+  };
 
   formSubmit = searchQuery => {
     this.props.history.push({
@@ -44,8 +45,6 @@ class MoviesView extends Component {
       search: `query=${searchQuery}`,
     });
   };
-
-  parseQueryFromProps = props => queryString.parse(props.location.search);
 
   render() {
     const { searchMoviesArr, error } = this.state;
