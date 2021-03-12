@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink, Route, Switch } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
 import TitleOnError from '../components/TitleOnError';
 import Cast from '../components/Cast';
 import Reviews from '../components/Reviews';
@@ -15,6 +16,7 @@ class MovieDetailsView extends Component {
     cast: [],
     reviews: [],
 
+    isLoading: false,
     error: null,
   };
 
@@ -25,10 +27,13 @@ class MovieDetailsView extends Component {
   }
 
   fetchAndSetStateAllInfo = id => {
+    this.setState({ isLoading: true });
+
     api
       .fetchInfoByMovies(id)
       .then(data => this.setState({ InfoByMovies: data }))
-      .catch(error => this.setState({ error }));
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
 
     api
       .fetchInfoByCast(id)
@@ -55,70 +60,82 @@ class MovieDetailsView extends Component {
   };
 
   render() {
-    const { InfoByMovies, cast, reviews, error } = this.state;
+    const { InfoByMovies, cast, reviews, error, isLoading } = this.state;
 
     const { match, location } = this.props;
 
     return (
-      <section className="MovieDetailsCard">
-        {error && <TitleOnError />}
-        <BackButton onBack={this.handleGoBack} />
+      <>
+        {isLoading && (
+          <Loader
+            type="ThreeDots"
+            color="#56b5b8"
+            height={50}
+            width={80}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          />
+        )}
+        <section className="MovieDetailsCard">
+          {error && <TitleOnError />}
+          <BackButton onBack={this.handleGoBack} />
 
-        <img
-          src={
-            InfoByMovies.poster_path &&
-            `https://image.tmdb.org/t/p/w780${InfoByMovies.poster_path}`
-          }
-          alt={InfoByMovies.title}
-        />
-        <div className="MovieDetailsWrapper">
-          <MovieDetails info={InfoByMovies} />
+          <img
+            src={
+              InfoByMovies.poster_path &&
+              `https://image.tmdb.org/t/p/w780${InfoByMovies.poster_path}`
+            }
+            alt={InfoByMovies.title}
+          />
 
-          <ul>
-            <li>
-              <NavLink
-                to={{
-                  pathname: `${match.url}/cast`,
-                  state: {
-                    from:
-                      location.state && location.state.from
-                        ? location.state.from
-                        : null,
-                  },
-                }}
-              >
-                Cast
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to={{
-                  pathname: `${match.url}/reviews`,
-                  state: {
-                    from:
-                      location.state && location.state.from
-                        ? location.state.from
-                        : null,
-                  },
-                }}
-              >
-                Reviews
-              </NavLink>
-            </li>
-          </ul>
+          <div className="MovieDetailsWrapper">
+            <MovieDetails info={InfoByMovies} />
 
-          <Switch>
-            <Route
-              path={`${match.path}/cast`}
-              render={props => <Cast {...props} dataCast={cast} />}
-            />
-            <Route
-              path={`${match.path}/reviews`}
-              render={props => <Reviews {...props} dataReviews={reviews} />}
-            />
-          </Switch>
-        </div>
-      </section>
+            <ul>
+              <li>
+                <NavLink
+                  to={{
+                    pathname: `${match.url}/cast`,
+                    state: {
+                      from:
+                        location.state && location.state.from
+                          ? location.state.from
+                          : null,
+                    },
+                  }}
+                >
+                  Cast
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={{
+                    pathname: `${match.url}/reviews`,
+                    state: {
+                      from:
+                        location.state && location.state.from
+                          ? location.state.from
+                          : null,
+                    },
+                  }}
+                >
+                  Reviews
+                </NavLink>
+              </li>
+            </ul>
+
+            <Switch>
+              <Route
+                path={`${match.path}/cast`}
+                render={props => <Cast {...props} dataCast={cast} />}
+              />
+              <Route
+                path={`${match.path}/reviews`}
+                render={props => <Reviews {...props} dataReviews={reviews} />}
+              />
+            </Switch>
+          </div>
+        </section>
+      </>
     );
   }
 }

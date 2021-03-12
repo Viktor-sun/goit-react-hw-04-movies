@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
+import Loader from 'react-loader-spinner';
 import TitleOnError from '../components/TitleOnError';
 import SearchForm from '../components/SearchForm';
 import MoviesList from '../components/MoviesList';
@@ -9,6 +10,7 @@ class MoviesView extends Component {
   state = {
     searchMoviesArr: [],
     error: null,
+    isLoading: false,
   };
 
   componentDidMount() {
@@ -31,12 +33,15 @@ class MoviesView extends Component {
   parseQueryFromProps = props => queryString.parse(props.location.search);
 
   fetchAndSetStateMoves = query => {
+    this.setState({ isLoading: true });
+
     api
       .fetchSearchMovies(query)
       .then(data => {
         this.setState({ searchMoviesArr: data.results });
       })
-      .catch(error => this.setState({ error }));
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
   };
 
   formSubmit = searchQuery => {
@@ -47,12 +52,22 @@ class MoviesView extends Component {
   };
 
   render() {
-    const { searchMoviesArr, error } = this.state;
+    const { searchMoviesArr, error, isLoading } = this.state;
 
     return (
       <>
         {error && <TitleOnError />}
         <SearchForm submit={this.formSubmit} />
+
+        {isLoading && (
+          <Loader
+            type="ThreeDots"
+            color="#56b5b8"
+            height={50}
+            width={80}
+            style={{ display: 'flex', justifyContent: 'center' }}
+          />
+        )}
 
         <MoviesList movies={searchMoviesArr} />
       </>

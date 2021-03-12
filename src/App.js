@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
 import routes from './routes';
@@ -18,6 +19,16 @@ const MovieDetailsView = lazy(() =>
   ),
 );
 
+const Spiner = (
+  <Loader
+    type="ThreeDots"
+    color="#56b5b8"
+    height={50}
+    width={80}
+    style={{ display: 'flex', justifyContent: 'center' }}
+  />
+);
+
 const App = () => {
   return (
     <>
@@ -25,7 +36,7 @@ const App = () => {
         <Navigation />
       </Header>
 
-      <Suspense fallback={<h1 style={{ textAlign: 'center' }}>loading</h1>}>
+      <Suspense fallback={Spiner}>
         <Switch>
           <Route exact path={routes.home} component={HomeView} />
           <Route path={routes.movieDetails} component={MovieDetailsView} />
