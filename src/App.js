@@ -25,7 +25,7 @@ const App = () => {
         <Navigation />
       </Header>
 
-      <Suspense fallback={<h1>load</h1>}>
+      <Suspense fallback={<h1 style={{ textAlign: 'center' }}>loading</h1>}>
         <Switch>
           <Route exact path={routes.home} component={HomeView} />
           <Route path={routes.movieDetails} component={MovieDetailsView} />
