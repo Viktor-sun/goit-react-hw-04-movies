@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import HomeView from './views/HomeView';
 import MoviesView from './views/MoviesView';
 import MovieDetailsView from './views/MovieDetailsView';
@@ -18,6 +18,7 @@ const App = () => {
         <Route exact path={routes.home} component={HomeView} />
         <Route path={routes.movieDetails} component={MovieDetailsView} />
         <Route path={routes.movies} component={MoviesView} />
+        <Redirect to={routes.home} />
       </Switch>
     </>
   );
