@@ -4,6 +4,7 @@ import Loader from 'react-loader-spinner';
 import TitleOnError from '../components/TitleOnError';
 import SearchForm from '../components/SearchForm';
 import MoviesList from '../components/MoviesList';
+import LoadMoreButton from '../components/LoadMoreButton';
 import * as api from '../service/api-movies';
 
 class MoviesView extends Component {
@@ -11,6 +12,8 @@ class MoviesView extends Component {
     searchMoviesArr: [],
     error: null,
     isLoading: false,
+    currentPage: 1,
+    totalMovies: null,
   };
 
   componentDidMount() {
@@ -26,19 +29,28 @@ class MoviesView extends Component {
     const nextQuery = this.parseQueryFromProps(this.props).query;
 
     if (prevQuery !== nextQuery) {
-      this.fetchAndSetStateMoves(nextQuery);
+      if (nextQuery) {
+        this.fetchAndSetStateMoves(nextQuery);
+      } else {
+        this.setState({ searchMoviesArr: [] });
+      }
     }
   }
 
   parseQueryFromProps = props => queryString.parse(props.location.search);
 
   fetchAndSetStateMoves = query => {
+    const { currentPage } = this.state;
     this.setState({ isLoading: true });
 
     api
-      .fetchSearchMovies(query)
+      .fetchSearchMovies(query, currentPage)
       .then(data => {
-        this.setState({ searchMoviesArr: data.results });
+        this.setState(prevState => ({
+          searchMoviesArr: [...prevState.searchMoviesArr, ...data.results],
+          currentPage: prevState.currentPage + 1,
+          totalMovies: data.total_results,
+        }));
       })
       .catch(error => this.setState({ error }))
       .finally(() => this.setState({ isLoading: false }));
@@ -49,15 +61,35 @@ class MoviesView extends Component {
       pathname: this.props.location.pathname,
       search: `query=${searchQuery}`,
     });
+    this.setState({
+      currentPage: 1,
+      totalMovies: null,
+      searchMoviesArr: [],
+      error: null,
+    });
+  };
+
+  onBtnLoadMore = () => {
+    const searchQuery = this.parseQueryFromProps(this.props).query;
+    this.fetchAndSetStateMoves(searchQuery);
   };
 
   render() {
-    const { searchMoviesArr, error, isLoading } = this.state;
+    const { searchMoviesArr, error, isLoading, totalMovies } = this.state;
+    const shouldRenderLoadMoreButton =
+      !isLoading &&
+      searchMoviesArr.length > 0 &&
+      searchMoviesArr.length !== totalMovies;
 
     return (
       <>
         {error && <TitleOnError />}
         <SearchForm submit={this.formSubmit} />
+        <MoviesList movies={searchMoviesArr} />
+
+        {shouldRenderLoadMoreButton && (
+          <LoadMoreButton handleOnClick={this.onBtnLoadMore} />
+        )}
 
         {isLoading && (
           <Loader
@@ -68,8 +100,6 @@ class MoviesView extends Component {
             style={{ display: 'flex', justifyContent: 'center' }}
           />
         )}
-
-        <MoviesList movies={searchMoviesArr} />
       </>
     );
   }
