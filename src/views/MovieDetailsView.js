@@ -1,14 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, lazy } from 'react';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import Loader from 'react-loader-spinner';
 import TitleOnError from '../components/TitleOnError';
-import Cast from '../components/Cast';
-import Reviews from '../components/Reviews';
 import MovieDetails from '../components/MovieDetails';
 import BackButton from '../components/BackButton';
 import * as api from '../service/api-movies';
 import routes from '../routes';
 import '../styles/MovieDetailsView.scss';
+
+const Cast = lazy(() =>
+  import('../components/Cast' /* webpackChunkName: "cast-component" */),
+);
+
+const Reviews = lazy(() =>
+  import('../components/Reviews' /* webpackChunkName: "reviews-component" */),
+);
 
 class MovieDetailsView extends Component {
   state = {
