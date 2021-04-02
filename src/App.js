@@ -19,7 +19,7 @@ const MovieDetailsView = lazy(() =>
   ),
 );
 
-const Spiner = (
+const Spinner = (
   <Loader
     type="ThreeDots"
     color="#56b5b8"
@@ -36,7 +36,7 @@ const App = () => {
         <Navigation />
       </Header>
 
-      <Suspense fallback={Spiner}>
+      <Suspense fallback={Spinner}>
         <Switch>
           <Route exact path={routes.home} component={HomeView} />
           <Route path={routes.movieDetails} component={MovieDetailsView} />
