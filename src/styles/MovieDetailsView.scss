@@ -14,4 +14,8 @@
 
 .MovieDetailsWrapper {
   margin-left: 30px;
+  @media screen and (min-width: 650px) {
+    height: 85vh;
+    overflow-y: auto;
+  }
 }

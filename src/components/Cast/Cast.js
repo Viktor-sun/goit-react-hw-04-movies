@@ -11,8 +11,6 @@ const Cast = ({ dataCast }) => {
         {dataCast.length > 0 &&
           dataCast.map(({ id, name, character, profile_path }) => (
             <li key={id}>
-              <h3>{name}</h3>
-              <p>{character}</p>
               <img
                 src={`https://image.tmdb.org/t/p/w500${
                   !profile_path
@@ -21,6 +19,8 @@ const Cast = ({ dataCast }) => {
                 }`}
                 alt={name}
               />
+              <h3>{name}</h3>
+              <p>{character}</p>
             </li>
           ))}
       </ul>
